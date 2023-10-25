@@ -1,4 +1,5 @@
 import os
+import re
 
 # Clear console Function
 def clear_console():
@@ -11,73 +12,111 @@ def mostrar_menu():
     print("=================================")
     print("║          MENÚ - PerfBuild      ")
     print("=================================")
-    print("║ 1. ║Agregar Usuarios")
-    print("║ 2. ║Ver Trabajadores")
-    print("║ 3. ║Editar Trabajadores")
-    print("║ 4. ║Agrear Tareas")
-    print("║ 5. ║Ver Tareas")
-    print("║ 0. ║Salir")
+    print("║ 1. ║ Agregar Usuarios")
+    print("║ 2. ║ Ver Trabajadores")
+    print("║ 3. ║ Editar Trabajadores")
+    print("║ 4. ║ Agrear Tareas")
+    print("║ 5. ║ Ver Tareas")
+    print("║ 6. ║ ver cuadrillas y trabajadores por cuadrilla")
+    print("║ 0. ║ Salir")
     print("=================================")
     print('Proyecto de: Carlos Rivera, Cristobal Morales, Catalina Bulnes')
 
+#Statements
 worker_name = []
 worker_years = []
 worker_level = []
 activity_faena = {}
+cuadrilla = {}
 
 # Enter workers
 def joinWorkers ():
 
-    worker = int(input("Cuantos trabajadores desea registrar?: "))
+    worker = None
 
-    for i in range(worker): 
-        name = input("Ingresa el nombre del trabajador: ")
+    while worker is None:
+        try:
+            worker = int(input("Cuantos trabajadores desea registrar?: "))
+        except ValueError:
+            clear_console()
+            print("Error: debe ingresar un número válido.")
+    
+
+    for i in range(worker):
+
+        name = None
+        while name is None:
+            name = input("Ingresa el nombre del trabajador: ")
+            if re.match(r'^\s*$', name): 
+                clear_console()
+                print("Error: debe ingresar un nombre válido.")
+                name = None
+
         worker_name.append(name)
+        
+        years = None
+        while years is None:
+            try:
+                years = int(input("Ingresa los años del trabajador: "))
+                worker_years.append(years)
+            except ValueError:
+                clear_console()
+                print("Error: debe ingresar un año valido. ")
 
-        years = int(input("Ingresa los años del trabajador: "))
-        worker_years.append(years)
+        level = None
 
-        level = int(input("Ingrese el nivel del trabajador.\n1.- Poca experiencia (Junior - 1-3 años)\n2.- Mediana experiencia (Mid - 3-6 años)\n3.- Bastante experiencia (Senior - 7 o más años)\n"))
+        while level is None:
+            try:
+                level = int(input("Ingrese el nivel del trabajador.\n1.- Poca experiencia (Junior - 1-3 años)\n2.- Mediana experiencia (Mid - 3-6 años)\n3.- Bastante experiencia (Senior - 7 o más años)\n"))
 
-        if level == 1:
-            worker_level.append("Junior (Junior - 1-3 años)")
-        elif level == 2:
-            worker_level.append("Mid (Mid - 3-6 años)")
-        elif level == 3:
-            worker_level.append("Senior (Senior - 7 o más años)")
-        else: 
-            worker_level.append("No definido")
+                if level == 1:
+                    worker_level.append("Junior (Junior - 1-3 años)")
+                elif level == 2:
+                    worker_level.append("Mid (Mid - 3-6 años)")
+                elif level == 3:
+                    worker_level.append("Senior (Senior - 7 o más años)")
+                else: 
+                    worker_level.append("No definido")
+            except ValueError:
+                clear_console()
+                print("Error: debe ingresar una opción valida. ")
 
         clear_console()
-    
-    return worker_name, worker_years, worker_level
 
 def viewWorker ():
     while True:
 
-        search_profile = int(input("Ingrese el ID de la persona que desea buscar: "))
+        search_profile = None
 
-        if search_profile == 0:
-            print("Error: El perfil no existe")
-        elif search_profile <= len(worker_name):
-            print("=================================")
-            print(f'║ Usuario {search_profile} de {len(worker_name)} ')
-            print("=================================")
-            print(f"║ID:          ║ {search_profile}")
-            print(f"║Nombre:      ║ {worker_name[search_profile - 1]}")
-            print(f"║Edad:        ║ {worker_years[search_profile - 1]}")
-            print(f"║Experiencia: ║ {worker_level[search_profile - 1]}") 
-            print("=================================")
-        else:
-            print("Error: El perfil no existe")
+        while search_profile is None:
 
-        break_while = int(input("Para buscar otro ID coloque 1, para salir, 0.\n"))
+            try:
+                search_profile = int(input("Ingrese el ID de la persona que desea buscar: "))
 
-        if break_while == 0:
-            clear_console()
-            break  
+                if search_profile == 0:
+                    print("Error: El perfil no existe")
+                elif search_profile <= len(worker_name):
+                    print("=================================")
+                    print(f'║ Usuario {search_profile} de {len(worker_name)} ')
+                    print("=================================")
+                    print(f"║ID:          ║ {search_profile}")
+                    print(f"║Nombre:      ║ {worker_name[search_profile - 1]}")
+                    print(f"║Edad:        ║ {worker_years[search_profile - 1]}")
+                    print(f"║Experiencia: ║ {worker_level[search_profile - 1]}") 
+                    print("=================================")
+                else:
+                    print("Error: El perfil no existe")
 
-        clear_console()
+                break_while = int(input("Para buscar otro ID coloque 1, para salir, 0.\n"))
+
+                if break_while == 0:
+                    clear_console()
+                    break  
+
+                clear_console()
+            except ValueError:
+                clear_console()
+                print("Error: debe ingresar un número válido.")
 
 def getInfo():
     meters = float(input("Cuantos metros de construcción realizara?: "))
@@ -110,7 +149,7 @@ def modiftyWorker():
             print("=======================")
 
             while True: 
-                modify_profile = int(input("¿Que esea modificar este perfil?: "))
+                modify_profile = int(input("¿Que desea modificar este perfil?: "))
 
                 if modify_profile == 1:
                     new_name = input('Ingresa el nuevo nombre: ')
@@ -161,6 +200,7 @@ def restrictions ():
 def faena():
 
     while True:
+
         activity = input("¿Ingrese la actividad que desea realizar?: ")
         activity_reptitions = int(input("¿Cuantas veces quiere repetir esta actividad?: "))
 
@@ -191,6 +231,82 @@ def viewFaena():
         clear_console()
     else:
         clear_console()
+        
+def number_of_crews_and_workers():
+
+    if len(worker_name) == 0:
+        clear_console()
+        ghost_input = input('Error: No tienes trabajadores suficientes para hacer esto.\n')
+
+        if ghost_input == "ghost input ;)":
+            clear_console()
+        else:
+            clear_console()            
+
+    else:
+        number_of_crews = None
+                    
+        while number_of_crews is None:
+            try:
+                number_of_crews = int(input(f"Ingrese la cantidad de cuadrillas: \nTe recomendamos colocar la misma cantidad de cuadrillas que las actividades de faena: {len(activity_faena)} "))
+            except ValueError:
+                clear_console()
+                print("Error: debe ingresar un número válido.")
+
+            count_workers = len(worker_level)
+
+            for i in range(number_of_crews):
+                number_of_workers = None
+                validate_workers = False
+
+                while validate_workers is False:
+                    try:
+                        if len(worker_name) == 0:
+                            print('Error: No tienes trabajadores suficientes para hacer esto.')
+                            break
+
+                        number_of_workers = int(input(f"Ingrese la cantidad de trabajadores de la cuadrilla {i+1}\n(Tienes {count_workers} trabajadores)\n "))
+
+                        if number_of_workers < 0:  
+                            clear_console()
+                            print("Error: debe ingresar un número positivo válido .")
+                        else:
+                            if count_workers == 0:
+                                clear_console()
+                                ghost_input = input('Ya no tienes trabajadores suficientes para hacer esto.\n')
+
+                                validate_workers = True
+                            else:
+                                if count_workers >= number_of_workers:
+                                    cuadrilla[f'Cuadrilla {i+1}'] = number_of_workers
+
+                                    count_workers -= number_of_workers
+
+                                    if count_workers == 0:
+                                        break
+
+                                    validate_workers = True
+                                        
+                                elif number_of_workers == 0:
+                                    clear_console()
+                                    print("Error: no hay suficientes trabajadores")
+                                else:
+                                    clear_console()
+                                    print("Error: no hay suficientes trabajadores")
+
+                    except ValueError:
+                        clear_console()
+                        print("Error: debe ingresar un número válido.")
+
+            for key, value in cuadrilla.items():
+                print(f"║ {key} - {value}")
+
+            ghost_input = input("Para continuar presione una tecla")
+
+            if ghost_input == "ghost input ;)":
+                clear_console()
+            else:
+                clear_console()
 
 # MENU NAVEGATION
 while True:
@@ -212,10 +328,19 @@ while True:
     elif opcion == "5":
         clear_console()
         viewFaena()
+    elif opcion == "6":
+        clear_console()
+        number_of_crews_and_workers()
     elif opcion == "0":
         clear_console()
         print("Saliendo del programa...")
         break
     else:
         clear_console()
-        print("Opción inválida. Por favor, seleccione una opción válida.")
+
+        ghost_input = input("Opción inválida. Por favor, seleccione una opción válida.")
+
+        if ghost_input == "a":
+            clear_console()
+        else:
+            clear_console()
