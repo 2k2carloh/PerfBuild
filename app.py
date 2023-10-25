@@ -8,14 +8,14 @@ def clear_console():
 clear_console()
 
 # Select Menu
-def mostrar_menu():
+def view_menu():
     print("=================================")
     print("║          MENÚ - PerfBuild      ")
     print("=================================")
     print("║ 1. ║ Agregar Usuarios")
     print("║ 2. ║ Ver Trabajadores")
     print("║ 3. ║ Editar Trabajadores")
-    print("║ 4. ║ Agrear Tareas")
+    print("║ 4. ║ Agregar Tareas")
     print("║ 5. ║ Ver Tareas")
     print("║ 6. ║ ver cuadrillas y trabajadores por cuadrilla")
     print("║ 0. ║ Salir")
@@ -83,6 +83,7 @@ def joinWorkers ():
 
         clear_console()
 
+# View workers info 
 def viewWorker ():
     while True:
 
@@ -118,11 +119,13 @@ def viewWorker ():
                 clear_console()
                 print("Error: debe ingresar un número válido.")
 
+# Get info from user
 def getInfo():
     meters = float(input("Cuantos metros de construcción realizara?: "))
     days = float(input("Cuantos dias de trabajo realizara?: "))
     total_days = days * meters
 
+# Modify workers info 
 def modiftyWorker():
     
     while True:
@@ -232,7 +235,7 @@ def viewFaena():
     else:
         clear_console()
         
-def number_of_crews_and_workers():
+def getIntoCrewData():
 
     if len(worker_name) == 0:
         clear_console()
@@ -310,7 +313,7 @@ def number_of_crews_and_workers():
 
 # MENU NAVEGATION
 while True:
-    mostrar_menu()
+    view_menu()
     opcion = input("Ingrese el número de opción que desea ejecutar: ")
 
     if opcion == "1":
@@ -330,7 +333,7 @@ while True:
         viewFaena()
     elif opcion == "6":
         clear_console()
-        number_of_crews_and_workers()
+        getIntoCrewData()
     elif opcion == "0":
         clear_console()
         print("Saliendo del programa...")
