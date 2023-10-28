@@ -17,18 +17,22 @@ def view_menu():
     print("║ 3. ║ Editar Trabajadores")
     print("║ 4. ║ Agregar Tareas")
     print("║ 5. ║ Ver Tareas")
-    print("║ 6. ║ ver cuadrillas y trabajadores por cuadrilla")
+    print('║ 6. ║ Ingresar datos de cuadrillas')
+    print("║ 7. ║ Ver cuadrillas y trabajadores por cuadrilla")
     print("║ 0. ║ Salir")
     print("=================================")
-    print('Proyecto de: Carlos Rivera, Cristobal Morales, Catalina Bulnes')
 
 #Statements
 worker_name = []
 worker_years = []
 worker_level = []
+worker_contract = []
+worker_salary = []
+worker_id_level = []
 activity_faena = {}
 cuadrilla = {}
 
+# Restrictions porcentages 
 def restrictionsPorcentages():
     restrictions_list = {
         "Mal clima": None,
@@ -131,6 +135,22 @@ def joinWorkers ():
                 clear_console()
                 print("Error: debe ingresar una opción valida. ")
 
+        contract = None
+
+        while contract is None:
+            try:
+                contract = int(input("Ingrese el tipo de contrato del trabajador.\n1.- Part-time\n2.- Full-time\n3.- Sin contrato"))
+
+                if contract == 1:
+                    worker_contract.append("Definido")
+                elif contract == 2:
+                    worker_contract.append("Indefinido")
+                else: 
+                    worker_contract.append("Sin contrato")
+            except ValueError:
+                clear_console()
+                print("Error: debe ingresar una opción valida. ")
+
         clear_console()
 
 # View workers info 
@@ -149,10 +169,11 @@ def viewWorker ():
                     print("=================================")
                     print(f'║ Usuario {search_profile} de {len(worker_name)} ')
                     print("=================================")
-                    print(f"║ID:          ║ {search_profile}")
-                    print(f"║Nombre:      ║ {worker_name[search_profile - 1]}")
-                    print(f"║Edad:        ║ {worker_years[search_profile - 1]}")
-                    print(f"║Experiencia: ║ {worker_level[search_profile - 1]}") 
+                    print(f"║ ID:          ║ {search_profile}")
+                    print(f"║ Nombre:      ║ {worker_name[search_profile - 1]}")
+                    print(f"║ Edad:        ║ {worker_years[search_profile - 1]}")
+                    print(f"║ Experiencia: ║ {worker_level[search_profile - 1]}") 
+                    print(f"║ Contrato:    ║ {worker_contract[search_profile - 1]}")
                     print("=================================")
                 else:
                     print("Error: El perfil no existe")
@@ -236,12 +257,38 @@ def faena():
 
     while True:
 
-        activity = input("¿Ingrese la actividad que desea realizar?: ")
-        activity_reptitions = int(input("¿Cuantas veces quiere repetir esta actividad?: "))
+        activity = None
+        while activity is None:
+            try:
+                activity = input("Ingrese la actividad de faena: ")
 
-        activity_faena[activity] = activity_reptitions
+                if re.match(r'^\s*$', activity): 
+                    clear_console()
+                    print("Error: debe ingresar un nombre válido.")
+                    activity = None
+            except ValueError:
+                clear_console()
+                print("Error: debe ingresar un nombre válido.")
+                activity = None
+
+        activity_faena_repeat = None
+        while activity_faena_repeat is None:
+            try:
+                activity_reptitions = int(input("Ingrese la cantidad de repeticiones de la actividad: "))
+                if activity_reptitions < 0:  
+                    clear_console()
+                    print("Error: debe ingresar un número positivo válido .")
+                else:
+                    activity_faena_repeat = activity_reptitions
+            except ValueError:
+                clear_console()
+                print("Error: debe ingresar un número válido.")
+                activity = None
         
-        finish_loop = input("¿Desea terminar de agregar tareas?: ")
+        activity_faena[activity] = activity_faena_repeat
+        
+        
+        finish_loop = input("¿Desea terminar de agregar tareas? Si(s) para terminar, No(n) para continuar: ")
         finish_loop = finish_loop.lower()
 
         if finish_loop == "s" or finish_loop == "si":
@@ -333,15 +380,148 @@ def getIntoCrewData():
                         clear_console()
                         print("Error: debe ingresar un número válido.")
 
-            for key, value in cuadrilla.items():
-                print(f"║ {key} - {value}")
-
             ghost_input = input("Para continuar presione una tecla")
 
             if ghost_input == "ghost input ;)":
                 clear_console()
             else:
                 clear_console()
+
+def viewCrewData():
+
+    if len(cuadrilla) == 0:
+        clear_console()
+        ghost_input = input('Error: No tienes cuadrillas suficientes para hacer esto.\n')
+
+        if ghost_input == "ghost input ;)":
+            clear_console()
+        else:
+            clear_console()
+    else:
+        print("=================================")
+        print("║ Cuadrilla ║ Trabajadores")
+        print("=================================")
+        for key, value in cuadrilla.items():
+            print(f"║ {key} - {value}")
+
+        print("=================================")
+        print('')
+        ghost_input = input("Para continuar presione una tecla")
+
+        if ghost_input == "a":
+            clear_console()
+        else:
+            clear_console()
+
+def calculateDateConstrucction():
+    
+    if len(worker_name) == 0 :
+        print('Antes de continuar, debes ingresar trabajadores.')
+    elif len(activity_faena) == 0:
+        print('Antes de continuar, debes ingresar actividades de faena.')
+    elif len(cuadrilla) == 0:
+        print('Antes de continuar, debes ingresar cuadrillas.')
+    else:
+        
+        construcction_title = input("Ingrese que construcción desea calcular: ")
+        counstruction_days = int(input("Ingrese la cantidad de días que durará la construcción: "))
+        construction_meters = int(input("Ingrese la cantidad de metros cuadrados que se construirán: "))
+        construction_cost = int(input("Ingrese el costo de la construcción: "))
+        construction_cost_per_day = construction_cost / counstruction_days
+        construction_cost_per_metere = construction_cost / construction_meters
+
+        percentage_payment_worker = ( construction_cost * 35 ) / 100
+
+        #Junior payment is 5% of the total payment
+        #Mid payment is 10% of the total payment
+        #Senir payment is 20% of the total payment
+
+        junior_payment = ( percentage_payment_worker * 20 ) / 100
+        mid_payment = ( percentage_payment_worker * 30 ) / 100
+        senior_payment = ( percentage_payment_worker * 50 ) / 100
+
+        junior_count = 0
+        mid_count = 0
+        senior_count = 0
+
+        meters_per_minute = 0
+
+        for i in worker_level:
+            if i == "Junior (Junior - 1-3 años)":
+                junior_count += 1
+                worker_id_level.append(1)
+            elif i == "Mid (Mid - 3-6 años)":
+                mid_count += 1
+                worker_id_level.append(2)
+            elif i == "Senior (Senior - 7 o más años)":
+                senior_count += 1
+                worker_id_level.append(3)
+            else:
+                print("Error: no hay trabajadores")
+
+        payment_per_junior = junior_payment / junior_count
+        payment_per_mid = mid_payment / mid_count
+        payment_per_senior = senior_payment / senior_count
+
+        for i in worker_id_level:
+            if i == 1:
+                worker_salary.append(payment_per_junior)
+            elif i == 2:
+                worker_salary.append(payment_per_mid)
+            elif i == 3:
+                worker_salary.append(payment_per_senior)
+            else:
+                print("Error: no hay trabajadores")
+
+        for i in range(len(worker_level)):
+            if worker_level[i] == "Junior (Junior - 1-3 años)":
+                if worker_contract[i] == "Definido":
+                    meters_per_minute += 0.3
+                elif worker_contract[i] == "Indefinido":
+                    meters_per_minute += 0.2
+                else: 
+                    meters_per_minute += 0.1
+            elif worker_level[i] == "Mid (Mid - 3-6 años)":
+                if worker_contract[i] == "Definido":
+                    meters_per_minute += 0.5
+                elif worker_contract[i] == "Indefinido":
+                    meters_per_minute += 0.4
+                else: 
+                    meters_per_minute += 0.3
+            else:
+                if worker_contract[i] == "Definido":
+                    meters_per_minute += 0.7
+                elif worker_contract[i] == "Indefinido":
+                    meters_per_minute += 0.6
+                else: 
+                    meters_per_minute += 0.5
+
+        construction_meters *= 2
+
+        meters_per_hours = meters_per_minute * 60
+
+        estimated_meters_per_day = construction_meters / counstruction_days
+
+        hours_per_day = estimated_meters_per_day / meters_per_hours
+
+        clear_console() 
+        for i in range(len(worker_name)):
+            print("=================================")
+            print(f"║ Nombre: ║ {worker_name[i]}")
+            print(f"║ Sueldo: ║ {worker_salary[i]}")
+            print("=================================")
+
+        print(f"El costo por día es de: {round(construction_cost_per_day, 2)}")
+        print(f"El costo por metro cuadrado es de: {round(construction_cost_per_metere, 2)}")
+        print(f"La jornada laboral es de: {round(hours_per_day)} horas por día")
+
+
+    ghost_input = input("Para continuar presione una tecla")
+
+    if ghost_input == "ghost input ;)":
+        clear_console()
+    else:
+        clear_console()
 
 # MENU NAVEGATION
 while True:
@@ -368,7 +548,10 @@ while True:
         getIntoCrewData()
     elif opcion == "7":
         clear_console()
-        restrictionsPorcentages()
+        viewCrewData()
+    elif opcion == "8":
+        clear_console()
+        calculateDateConstrucction()
     elif opcion == "0":
         clear_console()
         print("Saliendo del programa...")
