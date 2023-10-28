@@ -29,6 +29,56 @@ worker_level = []
 activity_faena = {}
 cuadrilla = {}
 
+def restrictionsPorcentages():
+    restrictions_list = {
+        "Mal clima": None,
+        "Equipamiento": None,
+        "Contrato": None,
+        "Dificultad": None,
+        "Supervision": None
+    }
+
+    restrictions = None
+    while restrictions is None:
+
+        number_counts = 1
+
+        for key in restrictions_list.keys():
+            print(f" {number_counts} ║ {key}")
+            number_counts += 1
+
+        print("")
+        
+        restrictions = input("¿Qué restricciones quieres usar? (separa con comas): ")
+        if re.match(r'^\s*$', restrictions): 
+            clear_console()
+            print("Error: debe ingresar un nombre válido.")
+            restrictions = None
+
+    restrictions = [int(x) for x in restrictions.split(",")]
+
+    total_restrictions = len(restrictions)
+    percentage_per_restriction = 15 / total_restrictions
+
+    for i in restrictions:
+        restriction = list(restrictions_list.keys())[i-1]
+        restrictions_list[restriction] = percentage_per_restriction
+
+    print("Lista de restricciones con porcentajes:")
+    for restriction, percentage in restrictions_list.items():
+        if percentage is not None:
+            print(f"{restriction}: {percentage}%")
+
+    ghost_input = input("Para continuar presione una tecla")
+
+    if ghost_input == "ghost input ;)":
+        clear_console()
+    else:
+        clear_console()  
+
+    return restrictions_list
+
+
 # Enter workers
 def joinWorkers ():
 
@@ -85,7 +135,6 @@ def joinWorkers ():
 
 # View workers info 
 def viewWorker ():
-    while True:
 
         search_profile = None
 
@@ -118,12 +167,6 @@ def viewWorker ():
             except ValueError:
                 clear_console()
                 print("Error: debe ingresar un número válido.")
-
-# Get info from user
-def getInfo():
-    meters = float(input("Cuantos metros de construcción realizara?: "))
-    days = float(input("Cuantos dias de trabajo realizara?: "))
-    total_days = days * meters
 
 # Modify workers info 
 def modiftyWorker():
@@ -186,18 +229,7 @@ def modiftyWorker():
             clear_console()
             break  
 
-        clear_console()
-
-# Restrictions
-def restrictions ():
-    
-    lista_de_restricciones = {
-        "Mal clima": None,
-        "Equipamiento": None,
-        "Contrato": None,
-        "Dificultad": None,
-        "Supervision": None
-    }
+        clear_console()    
 
 # Request faena activity
 def faena():
@@ -334,6 +366,9 @@ while True:
     elif opcion == "6":
         clear_console()
         getIntoCrewData()
+    elif opcion == "7":
+        clear_console()
+        restrictionsPorcentages()
     elif opcion == "0":
         clear_console()
         print("Saliendo del programa...")
