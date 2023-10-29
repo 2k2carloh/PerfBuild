@@ -12,13 +12,14 @@ def view_menu():
     print("=================================")
     print("║          MENÚ - PerfBuild      ")
     print("=================================")
-    print("║ 1. ║ Agregar Usuarios")
-    print("║ 2. ║ Ver Trabajadores")
-    print("║ 3. ║ Editar Trabajadores")
-    print("║ 4. ║ Agregar Tareas")
-    print("║ 5. ║ Ver Tareas")
+    print("║ 1. ║ Agregar usuarios")
+    print("║ 2. ║ Ver trabajadores")
+    print("║ 3. ║ Editar trabajadores")
+    print("║ 4. ║ Agregar faena")
+    print("║ 5. ║ Ver faena")
     print('║ 6. ║ Ingresar datos de cuadrillas')
     print("║ 7. ║ Ver cuadrillas y trabajadores por cuadrilla")
+    print("║ 8. ║ Calcular la construcción")
     print("║ 0. ║ Salir")
     print("=================================")
 
@@ -139,7 +140,7 @@ def joinWorkers ():
 
         while contract is None:
             try:
-                contract = int(input("Ingrese el tipo de contrato del trabajador.\n1.- Part-time\n2.- Full-time\n3.- Sin contrato"))
+                contract = int(input("Ingrese el tipo de contrato del trabajador.\n1.- Definido\n2.- Indefinido\n3.- Sin contrato"))
 
                 if contract == 1:
                     worker_contract.append("Definido")
@@ -430,6 +431,8 @@ def calculateDateConstrucction():
         construction_cost_per_day = construction_cost / counstruction_days
         construction_cost_per_metere = construction_cost / construction_meters
 
+        construction_meters_lineal = construction_meters ** 0.5
+
         percentage_payment_worker = ( construction_cost * 35 ) / 100
 
         #Junior payment is 5% of the total payment
@@ -496,8 +499,6 @@ def calculateDateConstrucction():
                 else: 
                     meters_per_minute += 0.5
 
-        construction_meters *= 2
-
         meters_per_hours = meters_per_minute * 60
 
         estimated_meters_per_day = construction_meters / counstruction_days
@@ -514,7 +515,21 @@ def calculateDateConstrucction():
         print(f"El costo por día es de: {round(construction_cost_per_day, 2)}")
         print(f"El costo por metro cuadrado es de: {round(construction_cost_per_metere, 2)}")
         print(f"La jornada laboral es de: {round(hours_per_day)} horas por día")
+        print(f'Los metros lineales de la faena son {round(construction_meters_lineal, 2)}')
+        print(f'El rendimiento de mano de obra es de {round(estimated_meters_per_day, 2)} metros cuadrados por día')
 
+        fanea_time = hours_per_day / 2
+
+        count_faena_time = 0
+
+        for i in activity_faena.values():
+            count_faena_time += i
+
+        hours_faena_per_activity = fanea_time / count_faena_time
+        faena_total = hours_faena_per_activity * counstruction_days
+
+        print(f'El tiempo estimado de cada actividad de faena es de {round(hours_faena_per_activity, 2)} horas por días')
+        print(f'El tiempo para cada actividad es de: {round(faena_total, 2)} horas en {counstruction_days} días')
 
     ghost_input = input("Para continuar presione una tecla")
 
