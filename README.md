@@ -10,6 +10,7 @@ Para poder ocupar el programa tenemos dos formas
     ```
     python app.py
     ```
+    https://i.imgur.com/LZgvodD.png
     > Si el nombre del archivo es modificado deberemos cambiar el nombre en el comando igual
     ```
     python nombre_archivio.py
